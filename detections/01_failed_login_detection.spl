@@ -1,4 +1,4 @@
-index=* sourcetype=soc_alert_lab EventCode=4625
+index=main sourcetype=csv EventCode=4625
 | stats count AS failed_attempts
         values(user) AS targeted_users
         values(src_ip) AS source_ips
