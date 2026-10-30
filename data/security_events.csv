@@ -1,1 +1,16 @@
+_time,host,EventCode,user,src_ip,dest_ip,LogonType,Status,process_name,parent_process,command_line,event_description
+2026-10-28T09:00:00Z,WIN11-WS01,4625,j.smith,203.0.113.77,10.0.0.25,10,0xC000006A,,,,"Failed login - incorrect password"
+2026-10-28T09:00:08Z,WIN11-WS01,4625,j.smith,203.0.113.77,10.0.0.25,10,0xC000006A,,,,"Failed login - incorrect password"
+2026-10-28T09:00:16Z,WIN11-WS01,4625,j.smith,203.0.113.77,10.0.0.25,10,0xC000006A,,,,"Failed login - incorrect password"
+2026-10-28T09:00:24Z,WIN11-WS01,4625,j.smith,203.0.113.77,10.0.0.25,10,0xC000006A,,,,"Failed login - incorrect password"
+2026-10-28T09:00:32Z,WIN11-WS01,4625,j.smith,203.0.113.77,10.0.0.25,10,0xC000006A,,,,"Failed login - incorrect password"
+2026-10-28T09:00:40Z,WIN11-WS01,4625,j.smith,203.0.113.77,10.0.0.25,10,0xC000006A,,,,"Failed login - incorrect password"
+2026-10-28T09:00:48Z,WIN11-WS01,4625,j.smith,203.0.113.77,10.0.0.25,10,0xC000006A,,,,"Failed login - incorrect password"
+2026-10-28T09:00:56Z,WIN11-WS01,4625,j.smith,203.0.113.77,10.0.0.25,10,0xC000006A,,,,"Failed login - incorrect password"
+2026-10-28T09:02:10Z,WIN11-WS01,4624,j.smith,203.0.113.77,10.0.0.25,10,,,,"Successful remote interactive login"
+2026-10-28T09:03:05Z,WIN11-WS01,4688,j.smith,,10.0.0.25,,,powershell.exe,explorer.exe,"powershell.exe -NoProfile -EncodedCommand SQBFAFgA...","PowerShell process created with encoded command"
+2026-10-28T09:04:15Z,WIN11-WS01,4688,j.smith,,10.0.0.25,,,cmd.exe,explorer.exe,"cmd.exe /c whoami","Command prompt launched"
+2026-10-28T09:05:20Z,WIN11-WS01,4688,j.smith,,10.0.0.25,,,whoami.exe,cmd.exe,"whoami","User identity enumeration"
+2026-10-28T09:06:30Z,WIN11-WS01,4624,administrator,10.0.0.10,10.0.0.25,2,,,,"Normal local console login"
+2026-10-28T09:07:10Z,WIN11-WS01,4688,administrator,,10.0.0.25,,,notepad.exe,explorer.exe,"notepad.exe","Normal application launch"
 
