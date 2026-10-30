@@ -1,0 +1,11 @@
+
+index=* sourcetype=soc_alert_lab EventCode=4625
+| stats count AS failed_attempts
+        values(user) AS targeted_users
+        values(src_ip) AS source_ips
+        min(_time) AS first_seen
+        max(_time) AS last_seen
+        BY host
+| convert ctime(first_seen) ctime(last_seen)
+| where failed_attempts >= 5
+| sort - failed_attempts
