@@ -1,136 +1,119 @@
 # SOC Incident Investigation Report
 
-## Case Information
-
-| Field | Details |
-|---|---|
-| Case ID | SOC-2026-001 |
-| Incident Type | Suspicious Authentication and PowerShell Execution |
-| Provisional Severity | High |
-| Affected Host | WIN11-WS01 |
-| Affected Account | j.smith |
-| Investigation Date | October 28, 2026 |
-| Analyst Role | SOC Tier 1 Analyst |
-| Dataset | Synthetic Windows Security Events |
-
 ## 1. Executive Summary
 
-An investigation of Windows Security events identified
-multiple failed remote authentication attempts against
-the account j.smith.
+This investigation analyzes a synthetic Windows security event dataset using Splunk Cloud.
 
-Eight failed login attempts were followed by a successful
-remote interactive login from the same source IP address.
+The simulated scenario involves repeated failed authentication attempts against the `j.smith` account, followed by a successful remote interactive login and suspicious process execution involving encoded PowerShell, Command Prompt, and user identity enumeration.
 
-Shortly afterward, PowerShell launched with an encoded
-command-line argument.
+**Assessment:** Suspicious activity requiring investigation. The synthetic evidence demonstrates a possible compromised-account scenario but does not establish that a real compromise occurred.
 
-The sequence is consistent with a possible account
-compromise followed by suspicious command execution.
+## 2. Environment
 
-However, the available evidence does not establish what
-the encoded command executed or whether the workstation
-was actually compromised.
+- SIEM: Splunk Cloud
+- Dataset: Synthetic Windows security events
+- Workstation: WIN11-WS01
+- Index: main
+- Sourcetype: csv
+- Total events analyzed: 14
 
-## 2. Indicators of Compromise
+## 3. Key Findings
 
-| Indicator | Observed Value |
+| Finding | Result |
 |---|---|
+| Failed logins | 8 |
+| Successful logins | 2 |
+| Process creation events | 4 |
+| Suspicious account | j.smith |
 | Source IP | 203.0.113.77 |
-| Target Host | WIN11-WS01 |
-| Target Account | j.smith |
-| Failed Logins | 8 |
-| Successful Logins | 1 |
-| Event IDs | 4625, 4624, 4688 |
-| Suspicious Process | powershell.exe |
-| Command Argument | -EncodedCommand |
+| Suspicious process | powershell.exe |
+| Workstation | WIN11-WS01 |
 
-Note: The source IP is reserved for documentation
-examples and is not a real attacker IP.
-
-## 3. Incident Timeline
+## 4. Incident Timeline
 
 All timestamps are UTC.
 
-| Time | Event |
+| Time | Event | Description |
+|---|---|---|
+| 09:00:00–09:00:56 | Event ID 4625 | Eight failed login attempts against j.smith |
+| 09:02:10 | Event ID 4624 | Successful remote interactive login |
+| 09:03:05 | Event ID 4688 | PowerShell launched with an encoded command |
+| 09:04:15 | Event ID 4688 | Command Prompt launched |
+| 09:05:20 | Event ID 4688 | whoami.exe executed |
+| 09:06:30 | Event ID 4624 | Administrator local console login |
+| 09:07:10 | Event ID 4688 | Notepad launched |
+
+## 5. Detection and Investigation
+
+### Detection 1: Repeated Failed Logins
+
+Eight Event ID 4625 events were identified against the same account and source IP within approximately one minute.
+
+### Detection 2: Successful Authentication
+
+An Event ID 4624 event showed a successful remote interactive login for j.smith shortly after the failed attempts.
+
+### Detection 3: Suspicious PowerShell Execution
+
+An Event ID 4688 event recorded PowerShell launching with the `-EncodedCommand` argument.
+
+Encoded PowerShell commands can conceal script contents and warrant further investigation.
+
+### Detection 4: Command Execution and Enumeration
+
+The subsequent process events showed:
+
+- cmd.exe
+- whoami.exe
+
+These commands can be used for command execution and user-context discovery.
+
+## 6. Indicators of Interest
+
+| Indicator | Value |
 |---|---|
-| 09:00:00 | First failed login |
-| 09:00:56 | Eighth failed login |
-| 09:02:10 | Successful remote login |
-| 09:03:05 | PowerShell launched with encoded command |
-| 09:04:15 | cmd.exe launched |
-| 09:05:20 | whoami.exe executed |
+| Source IP | 203.0.113.77 |
+| Account | j.smith |
+| Workstation | WIN11-WS01 |
+| PowerShell argument | -EncodedCommand |
+| Follow-up command | whoami |
 
-## 4. Authentication Analysis
+**Important:** 203.0.113.77 is an IP address reserved for documentation examples. It is not evidence of a real external attacker.
 
-Windows Event ID 4625 recorded eight failed
-authentication attempts against j.smith.
+## 7. MITRE ATT&CK Mapping
 
-Windows Event ID 4624 subsequently recorded a
-successful remote interactive login from the same
-source IP address.
+| Technique | ID | Relevance |
+|---|---|---|
+| Brute Force | T1110 | Repeated failed authentication attempts |
+| Valid Accounts | T1078 | Successful authentication after failures |
+| PowerShell | T1059.001 | PowerShell process execution |
+| Command and Scripting Interpreter | T1059 | Command-line execution |
 
-The sequence warrants investigation for possible
-credential compromise.
+These are potential technique mappings based on the simulated behavior, not confirmed adversary attribution.
 
-## 5. Process Execution Analysis
+## 8. Recommended Response Actions
 
-Windows Event ID 4688 recorded PowerShell execution
-with an encoded command-line argument.
+1. Validate the authentication activity with the account owner.
+2. Review the source IP and remote access logs.
+3. Inspect the complete PowerShell command and determine what it would execute.
+4. Review subsequent process activity and related endpoint telemetry.
+5. If this were a real confirmed incident, follow organizational procedures for account containment and credential resets.
+6. Preserve relevant logs for additional investigation.
 
-Additional process events showed:
+## 9. Final Assessment
 
-- cmd.exe execution
-- whoami.exe execution
-- User identity enumeration
+The synthetic dataset demonstrates a suspicious sequence involving repeated authentication failures, successful remote access, encoded PowerShell execution, and subsequent command-line activity.
 
-These behaviors warrant further investigation.
+The sequence warrants escalation for further investigation in a real SOC environment.
 
-## 6. MITRE ATT&CK Mapping
+No actual compromise, malware execution, or data exfiltration has been established.
 
-Potential behavioral mappings:
+## 10. Evidence Limitations
 
-| Technique | Description |
-|---|---|
-| T1110 | Brute Force |
-| T1021.001 | Remote Desktop Protocol |
-| T1059.001 | PowerShell |
-| T1033 | System Owner/User Discovery |
+- The dataset is synthetic and created for training.
+- The encoded PowerShell command is truncated in the supplied data.
+- No actual endpoint execution results are available.
+- No network traffic or malware samples were collected.
+- The source IP is documentation-reserved.
+- Findings demonstrate detection and investigation techniques, not a confirmed real-world incident.
 
-These mappings represent investigative hypotheses,
-not confirmed attacker techniques.
-
-## 7. Recommended Response Actions
-
-1. Validate the successful login with the account owner.
-2. Review additional authentication events.
-3. Investigate the encoded PowerShell command.
-4. Review process execution and parent-child relationships.
-5. Check for additional suspicious account activity.
-6. If compromise is confirmed, isolate the workstation
-   according to incident response policy.
-7. Reset compromised credentials and investigate
-   potential persistence mechanisms.
-
-## 8. Final Assessment
-
-The combination of repeated failed authentication,
-a subsequent successful remote login, and encoded
-PowerShell execution warrants escalation.
-
-Final determination:
-
-Suspicious activity requiring additional validation.
-
-## 9. Evidence Limitations
-
-This investigation uses simulated Windows Security events.
-
-No real workstation compromise, malware execution,
-or attacker activity occurred.
-
-The dataset does not establish the contents or effects
-of the encoded PowerShell command.
-
-Additional endpoint and authentication evidence would
-be necessary to reach a definitive conclusion.
