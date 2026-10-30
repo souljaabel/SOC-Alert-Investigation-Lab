@@ -1,4 +1,3 @@
-
 index=* sourcetype=soc_alert_lab EventCode=4625
 | stats count AS failed_attempts
         values(user) AS targeted_users
