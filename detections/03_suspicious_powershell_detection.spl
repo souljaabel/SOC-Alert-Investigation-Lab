@@ -1,0 +1,5 @@
+index=* sourcetype=soc_alert_lab EventCode=4688
+| where match(lower(process_name), "powershell\.exe")
+    OR match(lower(command_line), "-encodedcommand|-enc")
+| table _time host user process_name parent_process command_line
+| sort _time
